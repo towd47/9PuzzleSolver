@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Puzzle {
 	int[][] puzzleState;
-	int[][] goalState;
+	static int[][] goalState = new int[][] {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}};
 	int blankRow;
 	int blankCol;
 	int lastMove = -1;
@@ -17,20 +17,17 @@ public class Puzzle {
 				puzzleState[row][col] = (row*3) + col;
 			}
 		}
-		goalState = puzzleState;
 		blankRow = 0;
 		blankCol = 0;
 	}
 	
-	public void initializePuzzle(int[][] goalState) {
-		puzzleState = goalState;
-		this.goalState = goalState;
+	public void initializePuzzle(int[][] state) {
+		puzzleState = state;
 		for (int row = 0; row < puzzleState.length; row++) {
 			for (int col = 0; col < puzzleState.length; col++) {
 				if (puzzleState[row][col] == 0) {
 					blankRow = row;
 					blankCol = col;
-					return;
 				}
 			}
 		}
@@ -112,13 +109,18 @@ public class Puzzle {
 		blankRow++;
 	}
 	
-	public void printState() {
+	public String printState() {
+		String currentState = "";
 		for (int i = 0; i < puzzleState.length; i++) {
 			for (int j = 0; j < puzzleState.length; j++) {
-				System.out.print(puzzleState[i][j] + " ");
+				currentState = currentState + puzzleState[i][j];
+				if (j != 2) {
+					currentState = currentState + " ";
+				}
 			}
-			System.out.println();
+			currentState = currentState + "\n";
 		}
-		System.out.println();
+		System.out.println(currentState);
+		return currentState;
 	}
 }
