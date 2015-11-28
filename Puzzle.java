@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 public class Puzzle {
 	int[][] puzzleState;
@@ -6,11 +5,11 @@ public class Puzzle {
 	int blankRow;
 	int blankCol;
 	int lastMove = -1;
-	
+
 	public Puzzle(int size) {
 		puzzleState = new int[size][size];
 	}
-	
+
 	public void initializePuzzle() {
 		for (int row = 0; row < puzzleState.length; row++) {
 			for (int col = 0; col < puzzleState.length; col++) {
@@ -20,7 +19,7 @@ public class Puzzle {
 		blankRow = 0;
 		blankCol = 0;
 	}
-	
+
 	public void initializePuzzle(int[][] state) {
 		puzzleState = state;
 		for (int row = 0; row < puzzleState.length; row++) {
@@ -32,83 +31,78 @@ public class Puzzle {
 			}
 		}
 	}
-	
+
 	public void randomizePuzzle(int moves) {
-		for (int i = 0; i < moves; i++) {
-			int[] directions = getDirectionsBlankCanMove();
-			int direction = directions[(int) (Math.random() * directions.length)];
+		int movesDone = 0;
+		boolean moved;
+		while (movesDone < moves) {
+			int direction = (int)(Math.random() * 4);
 			while (direction == lastMove) {
-				direction = directions[(int) (Math.random() * directions.length)];
+				direction = (int) (Math.random() * 4);
 			}
 			if (direction == 0) {
-				moveBlankLeft();
+				moved = moveBlankLeft();
 				lastMove = 1;
 			}
 			else if (direction == 1) {
-				moveBlankRight();
+				moved = moveBlankRight();
 				lastMove = 0;
 			}
 			else if (direction == 2) {
-				moveBlankUp();
+				moved = moveBlankUp();
 				lastMove = 3;
 			}
 			else {
-				moveBlankDown();
+				moved = moveBlankDown();
 				lastMove = 2;
+			}
+			if (moved) {
+				movesDone++;
 			}
 			printState();
 		}
 	}
-	
-	public int[] getDirectionsBlankCanMove() {
-		ArrayList<Integer> directions = new ArrayList<Integer>(4);
-		if (blankRow != 0) {
-			directions.add(2);
-		}
-		
-		if (blankRow != puzzleState.length - 1) {
-			directions.add(3);
-		}
-		
+
+	public boolean moveBlankLeft() {
 		if (blankCol != 0) {
-			directions.add(0);
+			puzzleState[blankRow][blankCol] = puzzleState[blankRow][blankCol - 1];
+			puzzleState[blankRow][blankCol - 1] = 0;
+			blankCol--;
+			return true;
 		}
-		
-		if (blankCol != puzzleState[0].length - 1) {
-			directions.add(1);
+		return false;
+	}
+
+	public boolean moveBlankRight() {
+		if (blankCol != puzzleState.length - 1) {
+			puzzleState[blankRow][blankCol] = puzzleState[blankRow][blankCol + 1];
+			puzzleState[blankRow][blankCol + 1] = 0;
+			blankCol++;
+			return true;
 		}
-		
-		int[] intDirections = new int[directions.size()];
-		for (int i = 0; i < directions.size(); i++) {
-			intDirections[i] = directions.get(i);
+		return false;
+	}
+
+	public boolean moveBlankUp() {
+		if (blankRow != 0) {
+			puzzleState[blankRow][blankCol] = puzzleState[blankRow - 1][blankCol];
+			puzzleState[blankRow - 1][blankCol] = 0;
+			blankRow--;
+			return true;
 		}
-		return intDirections;
+		return false;
 	}
-	
-	public void moveBlankLeft() {
-		puzzleState[blankRow][blankCol] = puzzleState[blankRow][blankCol - 1];
-		puzzleState[blankRow][blankCol - 1] = 0;
-		blankCol--;
+
+	public boolean moveBlankDown() {
+		if (blankRow != puzzleState[0].length - 1) {
+			puzzleState[blankRow][blankCol] = puzzleState[blankRow + 1][blankCol];
+			puzzleState[blankRow + 1][blankCol] = 0;
+			blankRow++;
+			return true;
+		}
+		return false;
 	}
-	
-	public void moveBlankRight() {
-		puzzleState[blankRow][blankCol] = puzzleState[blankRow][blankCol + 1];
-		puzzleState[blankRow][blankCol + 1] = 0;
-		blankCol++;
-	}
-	
-	public void moveBlankUp() {
-		puzzleState[blankRow][blankCol] = puzzleState[blankRow - 1][blankCol];
-		puzzleState[blankRow - 1][blankCol] = 0;
-		blankRow--;
-	}
-	
-	public void moveBlankDown() {
-		puzzleState[blankRow][blankCol] = puzzleState[blankRow + 1][blankCol];
-		puzzleState[blankRow + 1][blankCol] = 0;
-		blankRow++;
-	}
-	
+
 	public String printState() {
 		String currentState = "";
 		for (int i = 0; i < puzzleState.length; i++) {
