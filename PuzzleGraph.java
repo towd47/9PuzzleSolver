@@ -1,39 +1,24 @@
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class PuzzleGraph {
 	private int numNodes;
 	private int maxNodes;
-	private HashMap<Integer, int[][]> visitedStates;
+	public HashMap<Integer, String> visitedStates;
 	public Puzzle puzzle;
+	public LinkedList<Node> processStates; 
 	
 	
-	public PuzzleGraph(int maxNodes, int puzzleSize) {
+	public PuzzleGraph(int maxNodes, int puzzleSize, int randomizeMoves) {
 		puzzle = new Puzzle(puzzleSize);
+		puzzle.initializePuzzle();
 		this.maxNodes = maxNodes;
 		numNodes = 0;
-		visitedStates = new HashMap<Integer, int[][]>(maxNodes);
-		
-	}
-	class Node {
-		private int[][] state;
-		private int key;
-		ArrayList<Node> adjacencyList;
-		private Boolean encountered;
-		
-		public Node(int[][] state) {
-			this.state = state;
-			key = 0;
-			for (int i = 0; i < state.length; i++) {
-				key = key + (i + 1) * state[i][i];
-			}
-			visitedStates.put(this.key, this.state);
-		}
-		
-		public void createAdjacencyList(Node node) {
-			puzzle.initializePuzzle(node.state);
-			
-		}
-		
+		puzzle.randomizePuzzle(randomizeMoves);
+		visitedStates = new HashMap<Integer, String>(maxNodes);
+		processStates = new LinkedList<Node>();
+		Node startingNode = new Node(puzzle.puzzleState);
+		visitedStates.put(startingNode.getKey(), puzzle.getState(false));
+		processStates.add(startingNode);
 	}
 }

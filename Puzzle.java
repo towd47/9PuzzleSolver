@@ -59,8 +59,9 @@ public class Puzzle {
 			if (moved) {
 				movesDone++;
 			}
-			printState();
 		}
+		System.out.println("Randomized state is:");
+		getState(true);
 	}
 
 	public boolean moveBlankLeft() {
@@ -103,7 +104,7 @@ public class Puzzle {
 		return false;
 	}
 
-	public String printState() {
+	public String getState(boolean print) {
 		String currentState = "";
 		for (int i = 0; i < puzzleState.length; i++) {
 			for (int j = 0; j < puzzleState.length; j++) {
@@ -114,7 +115,23 @@ public class Puzzle {
 			}
 			currentState = currentState + "\n";
 		}
-		System.out.println(currentState);
+		if (print) {
+			System.out.println(currentState);
+		}
 		return currentState;
+	}
+	
+	public String getGoalState() {
+		String goalState = "";
+		for (int row = 0; row < puzzleState.length; row++) {
+			for (int col = 0; col < puzzleState.length; col++) {
+				goalState = goalState + ((row*3) + col);
+				if (col != 2) {
+					goalState = goalState + " ";
+				}
+			}
+			goalState = goalState + "\n";
+		}
+		return goalState;
 	}
 }
