@@ -1,7 +1,7 @@
 
 public class Puzzle {
 	int[][] puzzleState;
-	static int[][] goalState = new int[][] {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}};
+	String goalStateStr;
 	int blankRow;
 	int blankCol;
 	int lastMove = -1;
@@ -11,25 +11,30 @@ public class Puzzle {
 	}
 
 	public void initializePuzzle() {
+		int currentVal = 0;
 		for (int row = 0; row < puzzleState.length; row++) {
-			for (int col = 0; col < puzzleState.length; col++) {
-				puzzleState[row][col] = (row*3) + col;
+			for (int col = 0; col < puzzleState[0].length; col++) {
+				puzzleState[row][col] = currentVal;
+				currentVal++;
 			}
 		}
 		blankRow = 0;
 		blankCol = 0;
+		this.goalStateStr = getGoalState();
 	}
 
 	public void initializePuzzle(int[][] state) {
 		puzzleState = state;
 		for (int row = 0; row < puzzleState.length; row++) {
-			for (int col = 0; col < puzzleState.length; col++) {
+			for (int col = 0; col < puzzleState[0].length; col++) {
 				if (puzzleState[row][col] == 0) {
 					blankRow = row;
 					blankCol = col;
+					break;
 				}
 			}
 		}
+		this.goalStateStr = getGoalState();
 	}
 
 	public void randomizePuzzle(int moves) {
@@ -42,19 +47,19 @@ public class Puzzle {
 			}
 			if (direction == 0) {
 				moved = moveBlankLeft();
-				lastMove = 1;
+				if (moved) lastMove = 1;
 			}
 			else if (direction == 1) {
 				moved = moveBlankRight();
-				lastMove = 0;
+				if (moved) lastMove = 0;
 			}
 			else if (direction == 2) {
 				moved = moveBlankUp();
-				lastMove = 3;
+				if (moved) lastMove = 3;
 			}
 			else {
 				moved = moveBlankDown();
-				lastMove = 2;
+				if (moved) lastMove = 2;
 			}
 			if (moved) {
 				movesDone++;
@@ -104,12 +109,22 @@ public class Puzzle {
 		return false;
 	}
 
+	public int[][] getStateArr() {
+		int[][] arrCopy = new int[puzzleState.length][puzzleState[0].length];
+		for (int i = 0; i < puzzleState.length; i++) {
+			for (int j = 0; j < puzzleState.length; j++) {
+				arrCopy[i][j] = puzzleState[i][j];
+			}
+		}
+		return arrCopy;
+	}
+	
 	public String getState(boolean print) {
 		String currentState = "";
 		for (int i = 0; i < puzzleState.length; i++) {
 			for (int j = 0; j < puzzleState.length; j++) {
 				currentState = currentState + puzzleState[i][j];
-				if (j != 2) {
+				if (j != puzzleState.length - 1) {
 					currentState = currentState + " ";
 				}
 			}
@@ -121,12 +136,12 @@ public class Puzzle {
 		return currentState;
 	}
 	
-	public String getGoalState() {
+	private String getGoalState() {
 		String goalState = "";
-		for (int row = 0; row < puzzleState.length; row++) {
-			for (int col = 0; col < puzzleState.length; col++) {
-				goalState = goalState + ((row*3) + col);
-				if (col != 2) {
+		for (int i = 0; i < puzzleState.length; i++) {
+			for (int j = 0; j < puzzleState.length; j++) {
+				goalState = goalState + ((i*puzzleState.length) + j);
+				if (j != puzzleState.length - 1) {
 					goalState = goalState + " ";
 				}
 			}

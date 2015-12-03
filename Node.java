@@ -1,40 +1,39 @@
-import java.util.ArrayList;
 
 public class Node {
-	public int[][] state;
-	public int key;
+	int[][] state;
 	Node previousNode;
-	ArrayList<Node> adjacencyList;
 
 	public Node(int[][] state) {
 		this.state = state;
-		key = getKey();
 		previousNode = null;
 	}
 	
 	public Node(int[][] state, Node previousNode) {
 		this.state = state;
-		key = getKey();
 		this.previousNode = previousNode;
 	}
-
-	public int getKey() {
-		key = 0;
-		for (int i = 0; i < state.length; i++) {
-			key = key + (i + 1) * state[i][i];
-		}
-		return key;
-	}
 	
-	public void printState() {
+	public String printState() {
+		String currentState = "";
 		for (int i = 0; i < state.length; i++) {
-			for (int j = 0; j < state.length; j++) {
-				System.out.println(state[i][j]);
-				if (j != 2) {
-					System.out.println(" ");
+			for (int j = 0; j < state[0].length; j++) {
+				currentState = currentState + state[i][j];
+				if (j != state.length - 1) {
+					currentState = currentState + " ";
 				}
 			}
-			System.out.println("\n");
+			currentState = currentState + "\n";
 		}
+		return currentState;
+	}
+	
+	public int[][] getState() {
+		int[][] stateCopy = new int[state.length][state[0].length];
+		for (int i = 0; i < state.length; i++) {
+			for (int j = 0; j < state[0].length; j++) {
+				stateCopy[i][j] = state[i][j];
+			}
+		}
+		return stateCopy;
 	}
 }

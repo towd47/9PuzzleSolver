@@ -1,75 +1,76 @@
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class BreadthFirstSearch {
-	PuzzleGraph graph;
 	Puzzle puzzle;
-	public BreadthFirstSearch(int maxNodes, int puzzleSize, int randomizeMoves) {
-		graph = new PuzzleGraph(maxNodes, puzzleSize, randomizeMoves);
+	HashMap<String, Node> visitedStates;
+	LinkedList<Node> processStates;
+	
+	public BreadthFirstSearch(int puzzleSize, int randomizeMoves) {
 		puzzle = new Puzzle(puzzleSize);
+		puzzle.initializePuzzle();
+		puzzle.randomizePuzzle(randomizeMoves);
+		processStates = new LinkedList<Node>();
+		visitedStates = new HashMap<String, Node>();
+		Node startingNode = new Node(puzzle.getStateArr());
+		processStates.add(startingNode);
 		
-		while (!createAdjacencyList(graph.processStates.getFirst())) {
-			graph.processStates.removeFirst();
+		while (!createAdjacencyList(processStates.getFirst())) {
+			visitedStates.put(startingNode.printState(), processStates.removeFirst());
 		}
+		Node tempNode = processStates.getFirst();
 		
-		Node currentNode = graph.processStates.getLast();
-		System.out.println("The solution is:\n");
-		while (currentNode.previousNode != null) {
-			currentNode.printState();
-			currentNode = currentNode.previousNode;
+		String solution = "";
+		int movesToSolve = 0;
+		
+		while (tempNode.previousNode != null) {
+			solution = tempNode.printState() + "\n" + solution;
+			tempNode = tempNode.previousNode;
+			movesToSolve++;
 		}
+		solution = startingNode.printState() + "\n" + solution;
+		solution = "The solution is:\n" + solution;
+		System.out.print(solution);
+		System.out.print("Took " + movesToSolve + " moves to solve puzzle.");
 	}
 	
 	public boolean createAdjacencyList(Node node) {
-		puzzle.initializePuzzle(node.state);
+		puzzle.initializePuzzle(node.getState());
+		if (puzzle.getState(false).equals(puzzle.goalStateStr)) {
+			return true;
+		}
 		if (puzzle.moveBlankLeft()) {
-			String testPuzzState = puzzle.getState(true);
-			if (!graph.visitedStates.containsValue(testPuzzState)) {
-				Node tempNode = new Node(puzzle.puzzleState, node);
-				graph.visitedStates.put(tempNode.getKey(), puzzle.getState(false));
-				graph.processStates.add(tempNode);
-				if (puzzle.getState(false) == puzzle.getGoalState()) {
-					return true;
-				}
+			String testPuzzState = puzzle.getState(false);
+			if (!visitedStates.containsKey(testPuzzState)) {
+				Node tempNode = new Node(puzzle.getStateArr(), node);
+				processStates.add(tempNode);
 			}	
 			puzzle.moveBlankRight();
 		}
 		if (puzzle.moveBlankRight()) {
-			String testPuzzState = puzzle.getState(true);
-			if (!graph.visitedStates.containsValue(testPuzzState)) {
-				Node tempNode = new Node(puzzle.puzzleState, node);
-				graph.visitedStates.put(tempNode.getKey(), puzzle.getState(false));
-				graph.processStates.add(tempNode);
-				if (puzzle.getState(false) == puzzle.getGoalState()) {
-					return true;
-				}
-			}	
+			String testPuzzState = puzzle.getState(false);
+			if (!visitedStates.containsKey(testPuzzState)) {
+				Node tempNode = new Node(puzzle.getStateArr(), node);
+				processStates.add(tempNode);
+			}		
 			puzzle.moveBlankLeft();
 		}
 		if (puzzle.moveBlankUp()) {
-			String testPuzzState = puzzle.getState(true);
-			if (!graph.visitedStates.containsValue(testPuzzState)) {
-				Node tempNode = new Node(puzzle.puzzleState, node);
-				graph.visitedStates.put(tempNode.getKey(), puzzle.getState(false));
-				graph.processStates.add(tempNode);
-				if (puzzle.getState(false) == puzzle.getGoalState()) {
-					return true;
-				}
+			String testPuzzState = puzzle.getState(false);
+			if (!visitedStates.containsKey(testPuzzState)) {
+				Node tempNode = new Node(puzzle.getStateArr(), node);
+				processStates.add(tempNode);
 			}	
 			puzzle.moveBlankDown();
 		}
 		if (puzzle.moveBlankDown()) {
-			String testPuzzState = puzzle.getState(true);
-			if (!graph.visitedStates.containsValue(testPuzzState)) {
-				Node tempNode = new Node(puzzle.puzzleState, node);
-				graph.visitedStates.put(tempNode.getKey(), puzzle.getState(false));
-				graph.processStates.add(tempNode);
-				if (puzzle.getState(false) == puzzle.getGoalState()) {
-					return true;
-				}
+			String testPuzzState = puzzle.getState(false);
+			if (!visitedStates.containsKey(testPuzzState)) {
+				Node tempNode = new Node(puzzle.getStateArr(), node);
+				processStates.add(tempNode);
 			}	
 			puzzle.moveBlankUp();
 		}
-		//puzzle.getState(true);
 		return false;
-		
 	}
 }
