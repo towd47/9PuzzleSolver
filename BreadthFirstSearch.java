@@ -16,7 +16,7 @@ public class BreadthFirstSearch {
 		processStates.add(startingNode);
 		
 		while (!createAdjacencyList(processStates.getFirst())) {
-			visitedStates.put(startingNode.printState(), processStates.removeFirst());
+			visitedStates.put(processStates.getFirst().printState(), processStates.removeFirst());
 		}
 		Node tempNode = processStates.getFirst();
 		

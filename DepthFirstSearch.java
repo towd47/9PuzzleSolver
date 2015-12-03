@@ -8,7 +8,7 @@ public class DepthFirstSearch {
 	int randomMoves;
 	HashMap<String, Node> visitedStates;
 	LinkedList<Node> processStates;
-	
+
 	public DepthFirstSearch(int randomizeMoves, int puzzSize) {
 		puzzle = new Puzzle(puzzSize);
 		randomMoves = randomizeMoves;
@@ -19,15 +19,15 @@ public class DepthFirstSearch {
 		Node startingNode = new Node(puzzle.getStateArr());
 		processStates.add(startingNode);
 		visitedStates = new HashMap<String, Node>();
-		
+
 		while (!createAdjacencyList(processStates.getFirst())) {
-			visitedStates.put(startingNode.printState(), processStates.removeFirst());
+			visitedStates.put(processStates.getFirst().printState(), processStates.removeFirst());
 		}
 		Node tempNode = processStates.getFirst();
-		
+
 		String solution = "";
 		int movesToSolve = 0;
-		
+
 		while (tempNode.previousNode != null) {
 			solution = tempNode.printState() + "\n" + solution;
 			tempNode = tempNode.previousNode;
@@ -38,37 +38,71 @@ public class DepthFirstSearch {
 		System.out.print(solution);
 		System.out.print("Took " + movesToSolve + " moves to solve puzzle.");
 	}
-	
+
 	public boolean createAdjacencyList(Node node) {
 		puzzle.initializePuzzle(node.getState());
 		if (puzzle.getState(false).equals(puzzle.goalStateStr)) {
 			return true;
 		}
-		String testPuzzState = puzzle.getState(false);
-		if (!visitedStates.containsKey(testPuzzState) && totalMoves < randomMoves && puzzle.moveBlankLeft()) {
-			Node tempNode = new Node(puzzle.getStateArr(), node);
-			processStates.add(tempNode);
-			totalMoves++;
+		if (totalMoves <= randomMoves && puzzle.moveBlankLeft()) {
+			String testPuzzState = puzzle.getState(false);
+			if (!visitedStates.containsKey(testPuzzState)) {
+				Node tempNode = new Node(puzzle.getStateArr(), node);
+				processStates.add(tempNode);
+				tempNode.previousNode.addChild(tempNode);
+				totalMoves++;
+				return false;
+			}
+			else {
+				puzzle.moveBlankRight();
+			}
 		}
-		else if (!visitedStates.containsKey(testPuzzState) && totalMoves < randomMoves  && puzzle.moveBlankUp()) {
-			Node tempNode = new Node(puzzle.getStateArr(), node);
-			processStates.add(tempNode);
-			totalMoves++;
+		if (totalMoves <= randomMoves && puzzle.moveBlankUp()) {
+			String testPuzzState = puzzle.getState(false);
+			if (!visitedStates.containsKey(testPuzzState)) {
+				Node tempNode = new Node(puzzle.getStateArr(), node);
+				processStates.add(tempNode);
+				tempNode.previousNode.addChild(tempNode);
+				totalMoves++;
+				return false;
+			}
+			else {
+				puzzle.moveBlankDown();
+			}
 		}
-		else if (!visitedStates.containsKey(testPuzzState) && totalMoves < randomMoves  && puzzle.moveBlankRight()) {
-			Node tempNode = new Node(puzzle.getStateArr(), node);
-			processStates.add(tempNode);
-			totalMoves++;
+		if (totalMoves <= randomMoves && puzzle.moveBlankRight()) {
+			String testPuzzState = puzzle.getState(false);
+			if (!visitedStates.containsKey(testPuzzState)) {
+				Node tempNode = new Node(puzzle.getStateArr(), node);
+				processStates.add(tempNode);
+				tempNode.previousNode.addChild(tempNode);
+				totalMoves++;
+				return false;
+			}
+			else {
+				puzzle.moveBlankLeft();
+			}
 		}
-		else if (!visitedStates.containsKey(testPuzzState) && totalMoves < randomMoves  && puzzle.moveBlankDown()) {
-			Node tempNode = new Node(puzzle.getStateArr(), node);
-			processStates.add(tempNode);
-			totalMoves++;
+		if (totalMoves <= randomMoves && puzzle.moveBlankDown()) {
+			String testPuzzState = puzzle.getState(false);
+			if (!visitedStates.containsKey(testPuzzState)) {
+				Node tempNode = new Node(puzzle.getStateArr(), node);
+				processStates.add(tempNode);
+				tempNode.previousNode.addChild(tempNode);
+				totalMoves++;
+				return false;
+			}
+			else {
+				puzzle.moveBlankUp();
+			}				
 		}
-		else {
-			processStates.add(node.previousNode);
-			totalMoves--;
+		processStates.add(node.previousNode);
+		if (!node.children.isEmpty()) {
+			for (int i = 0; i < node.children.size(); i++) {
+				visitedStates.remove(node.children.get(i).printState());
+			}
 		}
+		totalMoves--;
 		return false;
 	}
 }

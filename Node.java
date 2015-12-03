@@ -1,16 +1,24 @@
+import java.util.ArrayList;
 
 public class Node {
 	int[][] state;
 	Node previousNode;
+	ArrayList<Node> children;
 
 	public Node(int[][] state) {
 		this.state = state;
 		previousNode = null;
+		children = new ArrayList<Node>();
 	}
 	
 	public Node(int[][] state, Node previousNode) {
 		this.state = state;
 		this.previousNode = previousNode;
+		children = new ArrayList<Node>();
+	}
+	
+	public void addChild(Node node) {
+		children.add(node);
 	}
 	
 	public String printState() {
