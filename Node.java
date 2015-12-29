@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 /* Node is used in the searches to create links between the states
  * to form a tree to find the solution 
@@ -7,25 +6,17 @@ import java.util.ArrayList;
 public class Node {
 	int[][] state;
 	Node previousNode;
-	ArrayList<Node> children;
 
 	//Creates a new node with the given state
 	public Node(int[][] state) {
 		this.state = state;
 		previousNode = null;
-		children = new ArrayList<Node>();
 	}
 	
 	//Creates a new node with the given state and sets a pointer to the node this one was reached from
 	public Node(int[][] state, Node previousNode) {
 		this.state = state;
 		this.previousNode = previousNode;
-		children = new ArrayList<Node>();
-	}
-	
-	//Adds a node to the list of children of this node
-	public void addChild(Node node) {
-		children.add(node);
 	}
 	
 	//returns the state of the node in string form

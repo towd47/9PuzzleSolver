@@ -15,13 +15,6 @@ public class DepthFirstSearch {
 	public DepthFirstSearch(Puzzle puzzle) {
 		// Initializes variables
 		this.puzzle = puzzle;
-		if (puzzle.movesRandomized != - 1) {
-			randomMoves = puzzle.movesRandomized;
-		}
-		else {
-			randomMoves = 1000; // If puzzle was initialized to a state, the moves used to randomize it are unknown
-		}
-		totalMoves = 0;
 		processStates = new LinkedList<Node>();
 		Node startingNode = new Node(puzzle.getStateArr());
 		processStates.add(startingNode);
@@ -55,52 +48,44 @@ public class DepthFirstSearch {
 		if (puzzle.getState(false).equals(puzzle.goalStateStr)) {
 			return true;
 		}
-		if (totalMoves <= randomMoves && puzzle.moveBlankLeft()) {
+		if (puzzle.moveBlankLeft()) {
 			String testPuzzState = puzzle.getState(false);
 			if (!visitedStates.containsKey(testPuzzState)) {
 				Node tempNode = new Node(puzzle.getStateArr(), node);
 				processStates.add(tempNode);
-				tempNode.previousNode.addChild(tempNode);
-				totalMoves++;
 				return false;
 			}
 			else {
 				puzzle.moveBlankRight();
 			}
 		}
-		if (totalMoves <= randomMoves && puzzle.moveBlankUp()) {
+		if (puzzle.moveBlankUp()) {
 			String testPuzzState = puzzle.getState(false);
 			if (!visitedStates.containsKey(testPuzzState)) {
 				Node tempNode = new Node(puzzle.getStateArr(), node);
 				processStates.add(tempNode);
-				tempNode.previousNode.addChild(tempNode);
-				totalMoves++;
 				return false;
 			}
 			else {
 				puzzle.moveBlankDown();
 			}
 		}
-		if (totalMoves <= randomMoves && puzzle.moveBlankRight()) {
+		if (puzzle.moveBlankRight()) {
 			String testPuzzState = puzzle.getState(false);
 			if (!visitedStates.containsKey(testPuzzState)) {
 				Node tempNode = new Node(puzzle.getStateArr(), node);
 				processStates.add(tempNode);
-				tempNode.previousNode.addChild(tempNode);
-				totalMoves++;
 				return false;
 			}
 			else {
 				puzzle.moveBlankLeft();
 			}
 		}
-		if (totalMoves <= randomMoves && puzzle.moveBlankDown()) {
+		if (puzzle.moveBlankDown()) {
 			String testPuzzState = puzzle.getState(false);
 			if (!visitedStates.containsKey(testPuzzState)) {
 				Node tempNode = new Node(puzzle.getStateArr(), node);
 				processStates.add(tempNode);
-				tempNode.previousNode.addChild(tempNode);
-				totalMoves++;
 				return false;
 			}
 			else {
@@ -108,14 +93,6 @@ public class DepthFirstSearch {
 			}				
 		}
 		processStates.add(node.previousNode);
-		//Because the moves before trying a different path were also limited by the moves used to randomize puzzle
-		//To avoid errors I had to mark some already visited states as not visited so they could still be searched through
-		//In a different order. Only the first child in a tested direction is marked as visited
-		if (!node.children.isEmpty()) {
-			for (int i = 0; i < node.children.size(); i++) {
-				visitedStates.remove(node.children.get(i).getState());
-			}
-		}
 		totalMoves--;
 		return false;
 	}
