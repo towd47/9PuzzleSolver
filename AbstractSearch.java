@@ -1,7 +1,8 @@
 import java.util.HashSet;
 import java.util.LinkedList;
 
-/* BreadthFirstSearch solves a puzzle using breadth-first search.
+/* AbstractSearch implements the code common to BreadthFirstSearch
+ * and DepthFirstSearch.
  */
 public abstract class AbstractSearch {
 	protected Puzzle puzzle;
