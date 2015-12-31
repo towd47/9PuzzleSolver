@@ -6,15 +6,31 @@
 
 public class Puzzle {
 	int[][] puzzleState;
-	String goalStateStr;
-	int blankRow;
-	int blankCol;
-	int lastMove = -1;
-	int movesRandomized;
+	private String goalStateStr;
+	private int blankRow;
+	private int blankCol;
+	private int lastMove = -1;
 
 	//Constructor
 	public Puzzle(int size) {
 		puzzleState = new int[size][size];
+	}
+
+	public static void showSolution(Node node) {
+
+		// Creates solution string and prints solution to console
+		String solution = "";
+		int movesToSolve = 0;
+
+		while (node.previousNode != null) {
+			solution = node.getState() + "\n" + solution;
+			node = node.previousNode;
+			movesToSolve++;
+		}
+		solution = node.getState() + "\n" + solution;
+		solution = "The solution is:\n" + solution;
+		System.out.print(solution);
+		System.out.print("Took " + movesToSolve + " moves to solve puzzle.");
 	}
 
 	//Initializes the puzzle to the goal state
@@ -28,7 +44,7 @@ public class Puzzle {
 		}
 		blankRow = 0;
 		blankCol = 0;
-		movesRandomized = 0;
+
 		this.goalStateStr = getGoalState();
 	}
 	
@@ -44,8 +60,11 @@ public class Puzzle {
 				}
 			}
 		}
-		movesRandomized = -1;
 		this.goalStateStr = getGoalState();
+	}
+
+	public boolean isSolved() {
+		return getState(false).equals(goalStateStr);
 	}
 
 	//Randomizes the puzzle with a given number of moves and prints out the randomized state
@@ -80,7 +99,6 @@ public class Puzzle {
 			//TO SEE EACH STEP OF THE RANDOMIZER FOR TESTING
 			//UNCOMMENT THE LINE ABOVE
 		}
-		movesRandomized = movesDone;
 		System.out.println("Randomized state is:");
 		getState(true);
 	}
